@@ -16,16 +16,18 @@ public class WebScrapingService {
             Document doc = Jsoup.connect(url).get();
             StringBuilder result = new StringBuilder();
             Elements images = doc.select("img[src]");
-            result.append("Images:\n");
+            result.append("<h1>Images:</h1>");
             for (Element img : images) {
-                result.append(img.attr("src")).append("\n");
+                String src = img.attr("src");
+                result.append("<img src=\"").append(src).append("\" alt=\"Image\"><br>");
             }
-            result.append("\nText Content:\n");
-            result.append(doc.text());
+            result.append("<hr>");
+            result.append("<h1>Text Content:</h1>");
+            result.append("<p>").append(doc.text()).append("</p>");
             return result.toString();
         } catch (IOException e) {
             e.printStackTrace();
-            return "Error occurred while scraping the website.";
+            return "<p>Error occurred while scraping the website.</p>";
         }
     }
 }

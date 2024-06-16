@@ -12,7 +12,7 @@ public class WebScrapingController {
     @Autowired
     private WebScrapingService webScrapingService;
 
-    @GetMapping("/scrape")
+    @GetMapping(value = "/scrape", produces = "text/html")
     public String scrapeWebsite(@RequestParam(name = "url") String url) {
         return webScrapingService.scrapeWebsite(url);
     }
