@@ -42,7 +42,7 @@ public class AIService {
 
     public Mono<String> describeImage(String imageUrl) {
         String requestBody = "{ \"model\": \"gpt-4\", \"messages\": [ " +
-                "{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Describe this image: " + imageUrl + "\"}]}, " +
+                "{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Describe la imagen: " + imageUrl + "\"}]}, " +
                 "{\"role\": \"assistant\", \"content\": [{\"type\": \"text\", \"text\": \"\"}]} " +
                 "], \"temperature\": 1, \"max_tokens\": 256, \"top_p\": 1, \"frequency_penalty\": 0, \"presence_penalty\": 0 }";
 
