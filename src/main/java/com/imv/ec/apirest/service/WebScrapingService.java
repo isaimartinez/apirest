@@ -4,30 +4,50 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class WebScrapingService {
 
-    public String scrapeWebsite(String url) {
+    @Autowired
+    private AIService aiService;
+
+    public Mono<String> scrapeWebsite(String url) {
         try {
             Document doc = Jsoup.connect(url).get();
             StringBuilder result = new StringBuilder();
+            List<Mono<String>> aiTasks = new ArrayList<>();
+
             Elements images = doc.select("img[src]");
-            result.append("<h1>Images:</h1>");
+            result.append("<h1>Images and Descriptions:</h1>");
             for (Element img : images) {
                 String src = img.attr("src");
+                if (!src.startsWith("http")) {
+                    src = doc.location() + src;
+                }
                 result.append("<img src=\"").append(src).append("\" alt=\"Image\"><br>");
+                aiTasks.add(aiService.describeImage(src));
             }
-            result.append("<hr>");
-            result.append("<h1>Text Content:</h1>");
-            result.append("<p>").append(doc.text()).append("</p>");
-            return result.toString();
+
+            String textContent = doc.text();
+            aiTasks.add(aiService.summarizeText(textContent));
+
+            // Process AI responses
+            return Mono.zip(aiTasks, responses -> {
+                for (Object response : responses) {
+                    result.append("<p>").append(response.toString()).append("</p>");
+                }
+                return result.toString();
+            });
         } catch (IOException e) {
             e.printStackTrace();
-            return "<p>Error occurred while scraping the website.</p>";
+            return Mono.just("<p>Error occurred while scraping the website.</p>");
         }
     }
 }

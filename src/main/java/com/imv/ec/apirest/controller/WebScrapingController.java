@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 public class WebScrapingController {
@@ -13,7 +14,7 @@ public class WebScrapingController {
     private WebScrapingService webScrapingService;
 
     @GetMapping(value = "/scrape", produces = "text/html")
-    public String scrapeWebsite(@RequestParam(name = "url") String url) {
+    public Mono<String> scrapeWebsite(@RequestParam(name = "url") String url) {
         return webScrapingService.scrapeWebsite(url);
     }
 }
