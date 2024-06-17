@@ -24,22 +24,18 @@ public class WebScrapingService {
             StringBuilder result = new StringBuilder();
             List<Mono<String>> aiTasks = new ArrayList<>();
 
-            Elements images = doc.select("img[src^=//upload.wikimedia.org]"); // Select all images with src attribute
-                                                                             // starting with http or https
+            Elements images = doc.select("img[src^=//upload.wikimedia.org]");
             result.append("<h1>Images and Descriptions:</h1>");
             for (Element img : images) {
                 String src = img.attr("src");
-                if (src.contains("upload.wikimedia.org")) { // Check if src contains "upload.wikimedia.org"
                     result.append("<img src=\"").append(src).append("\" alt=\"Image\"><br>");
                     aiTasks.add(aiService.describeImage(src));
-                }
             }
 
             String textContent = doc.text();
             String shortTextContent = textContent.length() > 400 ? textContent.substring(0, 400) : textContent;
             aiTasks.add(aiService.summarizeText(shortTextContent));
 
-            // Process AI responses
             return Mono.zip(aiTasks, responses -> {
                 for (Object response : responses) {
                     result.append("<p>").append(response.toString()).append("</p>");
