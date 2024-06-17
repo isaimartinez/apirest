@@ -27,7 +27,7 @@ public class AIService {
 
     public Mono<String> summarizeText(String text) {
         String requestBody = "{ \"model\": \"gpt-4\", \"messages\": [ " +
-                "{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Haz un resumen de 100 caracteres del siguiente texto\\n" + text + "\"}]}, " +
+                "{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Haz un resumen de 500 caracteres del siguiente texto\\n" + text + "\"}]}, " +
                 "{\"role\": \"assistant\", \"content\": [{\"type\": \"text\", \"text\": \"\"}]} " +
                 "], \"temperature\": 1, \"max_tokens\": 256, \"top_p\": 1, \"frequency_penalty\": 0, \"presence_penalty\": 0 }";
 

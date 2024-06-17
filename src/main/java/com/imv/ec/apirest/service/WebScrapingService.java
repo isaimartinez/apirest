@@ -28,15 +28,19 @@ public class WebScrapingService {
             result.append("<h1>Images and Descriptions:</h1>");
             for (Element img : images) {
                 String src = img.attr("src");
+                String pic = src;
                 if (!src.startsWith("http")) {
                     src = doc.location() + src;
                 }
-                result.append("<img src=\"").append(src).append("\" alt=\"Image\"><br>");
+                result.append("<img src=\"").append(pic).append("\" alt=\"Image\"><br>");
                 aiTasks.add(aiService.describeImage(src));
             }
-
+            
+            
             String textContent = doc.text();
-            aiTasks.add(aiService.summarizeText(textContent));
+            String shortTextContent = textContent.length() > 400 ? textContent.substring(0, 400) : textContent;
+            aiTasks.add(aiService.summarizeText(shortTextContent));
+
 
             // Process AI responses
             return Mono.zip(aiTasks, responses -> {
