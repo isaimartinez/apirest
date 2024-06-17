@@ -1,6 +1,9 @@
-# My Project
+# Spring boot tryout
 
-This is a description of my project.
+Spring boot web scraper
+
+you need to run http://localhost:8080/scrape?url=https://es.wikipedia.org/wiki/Saturno_V
+
 
 ## Screenshots
 
