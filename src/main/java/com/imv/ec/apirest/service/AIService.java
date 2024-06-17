@@ -2,20 +2,21 @@ package com.imv.ec.apirest.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
 @Service
 public class AIService {
 
     private final WebClient webClient;
     private final ObjectMapper objectMapper;
 
-    public AIService(@Value("${openai.api.key}") String apiKey) {
+    public AIService() {
+         Dotenv dotenv = Dotenv.load();
+        String apiKey = dotenv.get("OPENAI_API_KEY");
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.openai.com/v1")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
